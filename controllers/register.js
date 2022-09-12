@@ -53,14 +53,14 @@ exports.changePassword = async (req, res) => {
 
 exports.forgotPassword = async (req, res) => {
   const { email } = req.body;
-  const id = req.params.userId;
+  // const id = req.params.userId;
 
   const newPassword = 'randomPassword';
 
   const hashPassword = await bcrypt.hash(newPassword, 4);
 
-  const sqlupdate = `UPDATE customers SET 
-  password= '${hashPassword}' WHERE id = ${id}`;
+  const sqlupdate = `UPDATE customers SET
+  password= '${hashPassword}' WHERE email = '${email}'`;
   const { rows } = await db.query(sqlupdate);
   if (rows === null) {
     res.status(500).send({
@@ -70,7 +70,7 @@ exports.forgotPassword = async (req, res) => {
     res.status(200).send({
       message: 'Forgot password!',
       body: {
-        data: { email, newPassword, hashPassword },
+        data: { email },
       },
     });
   }
